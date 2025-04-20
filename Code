@@ -1,0 +1,221 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class MathSolverGUI extends JFrame {
+
+    public MathSolverGUI() {
+        setTitle("Math Problem Solver");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        tabbedPane.add("Calculator", createCalculatorPanel());
+        tabbedPane.add("Quadratic Eq.", createQuadraticPanel());
+        tabbedPane.add("Square", createSquarePanel());
+        tabbedPane.add("Square Root", createSquareRootPanel());
+        tabbedPane.add("Percentage", createPercentagePanel());
+        tabbedPane.add("Trigonometry", createTrigPanel());
+
+        add(tabbedPane);
+    }
+
+    private JPanel createCalculatorPanel() {
+        JPanel panel = new JPanel(new GridLayout(5, 2, 5, 5));
+        JTextField num1 = new JTextField();
+        JTextField num2 = new JTextField();
+        String[] operations = {"+", "-", "*", "/"};
+        JComboBox<String> opBox = new JComboBox<>(operations);
+        JLabel result = new JLabel("Result: ");
+        JButton calcBtn = new JButton("Calculate");
+
+        calcBtn.addActionListener(e -> {
+            try {
+                float a = Float.parseFloat(num1.getText());
+                float b = Float.parseFloat(num2.getText());
+                String op = (String) opBox.getSelectedItem();
+                float res = 0;
+                switch (op) {
+                    case "+": res = a + b; break;
+                    case "-": res = a - b; break;
+                    case "*": res = a * b; break;
+                    case "/": 
+                        if (b == 0) {
+                            result.setText("Cannot divide by 0");
+                            return;
+                        }
+                        res = a / b;
+                        break;
+                }
+                result.setText("Result: " + res);
+            } catch (NumberFormatException ex) {
+                result.setText("Invalid input");
+            }
+        });
+
+        panel.add(new JLabel("Number 1:")); panel.add(num1);
+        panel.add(new JLabel("Number 2:")); panel.add(num2);
+        panel.add(new JLabel("Operation:")); panel.add(opBox);
+        panel.add(calcBtn); panel.add(result);
+
+        return panel;
+    }
+
+    private JPanel createQuadraticPanel() {
+        JPanel panel = new JPanel(new GridLayout(5, 2, 5, 5));
+        JTextField aField = new JTextField();
+        JTextField bField = new JTextField();
+        JTextField cField = new JTextField();
+        JLabel result = new JLabel("Result:");
+        JButton solveBtn = new JButton("Solve");
+
+        solveBtn.addActionListener(e -> {
+            try {
+                double a = Double.parseDouble(aField.getText());
+                double b = Double.parseDouble(bField.getText());
+                double c = Double.parseDouble(cField.getText());
+
+                double d = b * b - 4 * a * c;
+                if (d < 0) {
+                    result.setText("Roots are imaginary");
+                } else {
+                    double root1 = (-b + Math.sqrt(d)) / (2 * a);
+                    double root2 = (-b - Math.sqrt(d)) / (2 * a);
+                    result.setText(String.format("Roots: %.2f and %.2f", root1, root2));
+                }
+            } catch (NumberFormatException ex) {
+                result.setText("Invalid input");
+            }
+        });
+
+        panel.add(new JLabel("a:")); panel.add(aField);
+        panel.add(new JLabel("b:")); panel.add(bField);
+        panel.add(new JLabel("c:")); panel.add(cField);
+        panel.add(solveBtn); panel.add(result);
+
+        return panel;
+    }
+
+    private JPanel createSquarePanel() {
+        JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5));
+        JTextField num = new JTextField();
+        JLabel result = new JLabel("Result:");
+        JButton btn = new JButton("Find Square");
+
+        btn.addActionListener(e -> {
+            try {
+                float n = Float.parseFloat(num.getText());
+                result.setText("Square: " + (n * n));
+            } catch (NumberFormatException ex) {
+                result.setText("Invalid input");
+            }
+        });
+
+        panel.add(new JLabel("Number:")); panel.add(num);
+        panel.add(btn); panel.add(result);
+
+        return panel;
+    }
+
+    private JPanel createSquareRootPanel() {
+        JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5));
+        JTextField num = new JTextField();
+        JLabel result = new JLabel("Result:");
+        JButton btn = new JButton("Find Root");
+
+        btn.addActionListener(e -> {
+            try {
+                float n = Float.parseFloat(num.getText());
+                result.setText("Square Root: " + Math.sqrt(n));
+            } catch (NumberFormatException ex) {
+                result.setText("Invalid input");
+            }
+        });
+
+        panel.add(new JLabel("Number:")); panel.add(num);
+        panel.add(btn); panel.add(result);
+
+        return panel;
+    }
+
+    private JPanel createPercentagePanel() {
+        JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5));
+        JTextField obtain = new JTextField();
+        JTextField total = new JTextField();
+        JLabel result = new JLabel("Result:");
+        JButton btn = new JButton("Calculate");
+
+        btn.addActionListener(e -> {
+            try {
+                float got = Float.parseFloat(obtain.getText());
+                float full = Float.parseFloat(total.getText());
+                if (full == 0) {
+                    result.setText("Total can't be 0");
+                    return;
+                }
+                result.setText("Percentage: " + (got / full * 100) + "%");
+            } catch (NumberFormatException ex) {
+                result.setText("Invalid input");
+            }
+        });
+
+        panel.add(new JLabel("Obtained Marks:")); panel.add(obtain);
+        panel.add(new JLabel("Total Marks:")); panel.add(total);
+        panel.add(btn); panel.add(result);
+
+        return panel;
+    }
+
+    private JPanel createTrigPanel() {
+        JPanel panel = new JPanel(new GridLayout(6, 2, 5, 5));
+        JTextField a = new JTextField();
+        JTextField b = new JTextField();
+        JTextField c = new JTextField();
+        JComboBox<String> findBox = new JComboBox<>(new String[]{"Find A", "Find B", "Find C"});
+        JLabel result = new JLabel("Result:");
+        JButton btn = new JButton("Calculate");
+
+        btn.addActionListener(e -> {
+            try {
+                float fa = a.getText().isEmpty() ? 0 : Float.parseFloat(a.getText());
+                float fb = b.getText().isEmpty() ? 0 : Float.parseFloat(b.getText());
+                float fc = c.getText().isEmpty() ? 0 : Float.parseFloat(c.getText());
+
+                String choice = (String) findBox.getSelectedItem();
+                if ("Find A".equals(choice)) {
+                    if (fc < fb) {
+                        result.setText("C must be >= B");
+                        return;
+                    }
+                    result.setText("A: " + Math.sqrt(fc * fc - fb * fb));
+                } else if ("Find B".equals(choice)) {
+                    if (fc < fa) {
+                        result.setText("C must be >= A");
+                        return;
+                    }
+                    result.setText("B: " + Math.sqrt(fc * fc - fa * fa));
+                } else if ("Find C".equals(choice)) {
+                    result.setText("C: " + Math.sqrt(fa * fa + fb * fb));
+                }
+            } catch (NumberFormatException ex) {
+                result.setText("Invalid input");
+            }
+        });
+
+        panel.add(new JLabel("A:")); panel.add(a);
+        panel.add(new JLabel("B:")); panel.add(b);
+        panel.add(new JLabel("C:")); panel.add(c);
+        panel.add(new JLabel("What to Find:")); panel.add(findBox);
+        panel.add(btn); panel.add(result);
+
+        return panel;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new MathSolverGUI().setVisible(true);
+        });
+    }
+}
